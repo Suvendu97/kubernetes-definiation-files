@@ -5,6 +5,7 @@ metadata:
   labels:
     app: nginx
     type: frontend
+# namespace: dev # the pod will be created in the specified namespace
 spec:
   containers:
     - name: nginx

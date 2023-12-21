@@ -10,10 +10,18 @@ spec:
   containers:
     - name: nginx
       image: nginx
-
       command:
         - some-commands
         - echo "Hello"
+      env:
+        - name: APP_COLOR
+          valueFrom:
+            configMapKeyRef:
+              key: APP_COLOR
+              name: app-config
+            secretKeyRef:
+              key: DB_HOST
+              name: app-secret
 
       resources:
         requests:

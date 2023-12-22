@@ -16,28 +16,42 @@ spec:
       env:
         - name: APP_COLOR
           valueFrom:
-            configMapKeyRef:
+            configMapKeyRef:   # referencing the value from the configMap
               key: APP_COLOR
               name: app-config
-            secretKeyRef:
+            secretKeyRef:      # referencing the value from the secrets
               key: DB_HOST
               name: app-secret
 
       resources:
-        requests:
+        requests:              # ensure the container gets mentioned amount of resources
           memory: "64Mi"
           cpu: "250m"
-        limits:
+        limits:                # setting up the consumption limit
           memory: "128Mi"
           cpu: "500m"
 
-  tolerations:
+    - name: log-agent
+      image: log-agent
+      ports:
+        - containerPort: 8080
+
+  initContainers:
+    - name: init-myservice
+      image: busybox
+      command: ["sh", "-c", "git clone https://..."]
+
+    - name: init-mydb
+      image: busybox:1.28
+      command: ["sh", "-c", "git clone https://..."]
+
+  tolerations:                # setting up pod toleration against Node taint
     - key: "color" 
       operator: "Equal"
       value: "Blue"
       effect: "NoSchedule"
 
-  nodeSelector:
+  nodeSelector:               # selects a node with specified labeled
     size: large
 
   affinity:
